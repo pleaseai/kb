@@ -1,208 +1,100 @@
-# Product Spec — @pleaseai/kb
+# kb
 
-> A CLI tool for building and maintaining structured knowledge bases in GitHub repositories.
+Build and maintain structured knowledge bases in GitHub repositories.
 
-## Problem
+Stop researching the same topics across projects. `kb` turns scattered notes into a curated, structured knowledge base that your team — and your AI agents — can actually use.
 
-Teams repeatedly research the same topics across projects. Findings are scattered in Notion pages, Slack threads, markdown files, and developer memory. When a topic is revisited months later, the previous research is either lost, outdated, or trapped in a project-specific context that nobody can find.
+## Why
 
-AI coding agents make this worse: they need accurate, structured context to perform well. Unstructured document dumps degrade agent performance (confirmed by ASK evals — llms-full.txt scored 40% vs structured docs at 100%).
+- You research "WebSocket vs SSE" in Project A. Six months later, you research it again in Project B.
+- Your findings live in Slack threads, Notion pages, and markdown files nobody can find.
+- AI coding agents need structured context to perform well. Unstructured document dumps [make them worse, not better](https://github.com/pleaseai/ask/tree/main/evals/nuxt-ui).
 
-## Solution
+`kb` gives your research a home: a GitHub repo with structured articles, a knowledge graph for navigation, and LLM-powered compilation from raw notes into clean wiki entries.
 
-`kb` manages a GitHub-backed knowledge base of curated, structured markdown documents. It handles ingestion of raw research, LLM-powered compilation into clean wiki articles, graph-based knowledge indexing, and staleness detection.
-
-The KB repo is the **single source of truth** for team knowledge. Individual projects consume KB articles through ASK (`ask docs add github:org/kb --docs-path wiki/topic`), which handles the "last mile" of making documents available to AI agents.
-
-## Non-Goals
-
-- Not a note-taking app (use Obsidian, Notion, etc. for drafts)
-- Not a project-local tool — `kb` operates on the KB repo itself
-- Does not generate AGENTS.md or Claude Code skills (that's ASK's job)
-
-## Architecture
+## How It Works
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│                     KB GitHub Repo                       │
-│                                                          │
-│  raw/                  wiki/                             │
-│  ├── websocket-vs-sse/ ├── websocket-vs-sse.md          │
-│  │   ├── source1.md    ├── oauth2-flows.md              │
-│  │   └── source2.md    └── ...                          │
-│  └── oauth2-flows/                                      │
-│      └── rfc-notes.md  graph.json    ← knowledge graph  │
-│                        INDEX.md      ← generated view    │
-│                        kb.config.json                    │
-└────────────────────────────┬────────────────────────────┘
-                             │
-              ┌──────────────┼──────────────┐
-              ▼              ▼              ▼
-         Obsidian       Docus site      Projects
-         (local)        (web + search)  (via ASK)
+raw/                    wiki/                   graph.json
+├── websocket-vs-sse/   ├── websocket-vs-sse.md ┌─────────────────┐
+│   ├── mdn-notes.md    ├── oauth2-flows.md     │ categories:     │
+│   └── rfc-compare.md  └── ...                 │   networking    │
+└── oauth2-flows/                               │   auth          │
+    └── research.md          ▲                  │ articles:       │
+         │                   │                  │   ws-vs-sse ... │
+         └── kb compile ─────┘                  │ edges: [...]    │
+              (LLM)          │                  └─────────────────┘
+                             │                       │
+                        graph.json ──→ INDEX.md (generated view)
 ```
 
-### Directory Structure
+1. Collect raw research into `raw/<topic>/`
+2. Run `kb compile` — an LLM synthesizes raw sources into structured wiki articles
+3. `graph.json` tracks the knowledge graph; `INDEX.md` is generated for browsing
+4. Only changed topics are recompiled (incremental, like `make`)
+5. Browse in Obsidian, deploy as a Docus site, or pull into projects via [ASK](https://github.com/pleaseai/ask)
 
-```
-kb-repo/
-├── raw/                    # Unprocessed source material
-│   └── <topic>/            # One directory per topic
-│       ├── source1.md      # Raw notes, excerpts, transcripts
-│       ├── source2.md
-│       └── ...
-├── wiki/                   # Compiled, structured articles
-│   ├── <topic>.md          # One article per topic
-│   └── ...
-├── graph.json              # Knowledge graph (source of truth for structure)
-├── INDEX.md                # Auto-generated from graph.json
-├── kb.config.json          # KB configuration
-└── nuxt.config.ts          # Optional: Docus config for site deployment
-```
-
-## Knowledge Graph — `graph.json`
-
-Inspired by Microsoft's [RPG (Repository Planning Graph)](https://arxiv.org/abs/2509.16198) and [RPG-Encoder](https://arxiv.org/abs/2602.02084), KB maintains a hierarchical dual-view graph that enables both efficient incremental updates and structured agent navigation.
-
-RPG demonstrated that replacing natural language with an explicit graph representation dramatically improves agent performance — agents using RPG achieved 93.7% localization accuracy vs ~60-70% with documentation alone, while reducing costs by 95.7% through incremental maintenance. KB applies the same principles to knowledge management: `graph.json` is the structural backbone that makes compilation incremental and navigation efficient.
-
-### Graph Structure
-
-```json
-{
-  "version": 1,
-  "lastUpdated": "2026-04-08T12:00:00Z",
-  "nodes": {
-    "categories": {
-      "networking": {
-        "feature": "Network protocols, real-time communication, and transport layers",
-        "children": ["websocket-vs-sse", "http2-streams", "grpc-basics"]
-      },
-      "auth": {
-        "feature": "Authentication, authorization, and identity management",
-        "children": ["oauth2-flows", "jwt-tokens", "session-management"]
-      }
-    },
-    "articles": {
-      "websocket-vs-sse": {
-        "feature": "Comparison of WebSocket and Server-Sent Events for real-time bidirectional and unidirectional communication",
-        "metadata": {
-          "path": "wiki/websocket-vs-sse.md",
-          "tags": ["networking", "real-time", "websocket", "sse"],
-          "created": "2026-04-08",
-          "updated": "2026-04-08",
-          "sourceHash": "a3f2c1d..."
-        }
-      }
-    }
-  },
-  "edges": {
-    "functional": [
-      { "from": "networking", "to": "websocket-vs-sse" },
-      { "from": "networking", "to": "http2-streams" }
-    ],
-    "dependency": [
-      { "from": "websocket-vs-sse", "to": "http2-streams" },
-      { "from": "jwt-tokens", "to": "oauth2-flows" }
-    ]
-  }
-}
-```
-
-### Node Types
-
-Following RPG's dual-level hierarchy:
-
-- **Category nodes** (`categories`) — High-level groupings that represent knowledge domains. Each has a `feature` (semantic description) and `children` (list of article IDs). Categories are auto-generated during compilation by LLM-based semantic clustering.
-- **Article nodes** (`articles`) — Individual wiki documents. Each has a `feature` (one-line semantic summary for search), `metadata` (path, tags, dates), and a `sourceHash` (hash of raw source files used to produce the article — the key to incremental compilation).
-
-### Edge Types
-
-- **Functional edges** — Category → article containment. "This article belongs to this domain." Hierarchical, one-to-many.
-- **Dependency edges** — Article → article references. "This article references or builds on that article." Extracted from markdown links in wiki articles during compilation.
-
-### How `graph.json` Is Maintained
-
-The graph is a **derived artifact** — wiki articles (with their frontmatter and internal links) are the source of truth. `graph.json` is rebuilt by `kb index` by:
-
-1. Scanning all wiki article frontmatter → article nodes
-2. Parsing markdown links between articles → dependency edges
-3. LLM-based semantic clustering of articles → category nodes + functional edges
-4. Computing sourceHash for each article's raw sources → enabling incremental compilation
-
-## Incremental Compilation
-
-Inspired by RPG-Encoder's incremental maintenance protocol (which reduced token usage by 95.7% vs full reconstruction), `kb compile` only reprocesses what changed.
-
-### How It Works
-
-```
-kb compile
-    │
-    ├─ 1. Hash raw/<topic>/ files for each topic
-    ├─ 2. Compare against graph.json sourceHash
-    ├─ 3. Identify changed topics (hash mismatch)
-    ├─ 4. For each changed topic:
-    │     ├─ Send raw sources + existing article to LLM
-    │     ├─ Write updated wiki/<topic>.md
-    │     └─ Mark downstream dependents as potentially stale
-    └─ 5. Rebuild graph.json (kb index)
-```
-
-### Three Update Protocols (from RPG-Encoder)
-
-- **Addition** — New `raw/<topic>/` directory with no corresponding wiki article. LLM compiles from scratch. Graph assigns to existing category by semantic matching, or creates a new category.
-- **Modification** — `sourceHash` mismatch (raw sources changed since last compile). LLM receives both existing article and new/changed sources, produces an updated article. Graph re-evaluates category placement only if the article's semantic feature shifts significantly.
-- **Deletion** — `raw/<topic>/` removed. Wiki article is removed. Graph prunes the node and cleans up empty categories.
-
-### Staleness Propagation
-
-When article A is recompiled and article B has a dependency edge from A, B is flagged as "potentially stale" in `kb status` output. This doesn't trigger automatic recompilation — it's advisory, letting the team decide if B needs updating.
-
-## CLI Commands
-
-### `kb init`
-
-Initialize a new KB repository.
+## Installation
 
 ```bash
-kb init                     # Initialize in current directory
-kb init my-team-kb          # Create and initialize new directory
-kb init --with-site         # Also scaffold Docus config for site deployment
+bun install -g @pleaseai/kb
 ```
 
-Creates the directory structure (`raw/`, `wiki/`), `kb.config.json`, `graph.json`, `INDEX.md`, and a `.gitignore`.
+## Quick Start
+
+```bash
+# Initialize a new KB
+kb init my-team-kb
+cd my-team-kb
+git init && git remote add origin git@github.com:my-org/team-kb.git
+
+# Add raw research
+kb ingest websocket-vs-sse --from notes.md
+kb ingest websocket-vs-sse --from https://developer.mozilla.org/en-US/docs/Web/API/WebSocket
+
+# Compile into a wiki article
+kb compile websocket-vs-sse
+
+# Check what you've got
+kb status
+
+# Commit and push
+git add -A && git commit -m "feat: add websocket-vs-sse article"
+git push
+```
+
+## Commands
+
+### `kb init [directory]`
+
+Initialize a new knowledge base.
+
+```bash
+kb init                     # Current directory
+kb init my-team-kb          # New directory
+kb init --with-site         # Include Docus config for site deployment
+```
 
 ### `kb ingest <topic>`
 
 Add raw source material for a topic.
 
 ```bash
-kb ingest websocket-vs-sse                        # Interactive: paste or write
-kb ingest websocket-vs-sse --from file.md         # From a local file
-kb ingest websocket-vs-sse --from https://...     # From a URL (fetched + converted to md)
-kb ingest websocket-vs-sse --from clipboard       # From system clipboard
+kb ingest websocket-vs-sse                        # Interactive input
+kb ingest websocket-vs-sse --from file.md         # From local file
+kb ingest websocket-vs-sse --from https://...     # From URL
+kb ingest websocket-vs-sse --from clipboard       # From clipboard
 ```
-
-Saves source material to `raw/<topic>/`. Does not compile — just collects.
 
 ### `kb compile [topic]`
 
-Compile raw sources into wiki articles using an LLM. Incremental by default.
+Compile raw sources into structured wiki articles using an LLM. Incremental by default — only recompiles topics whose raw sources have changed.
 
 ```bash
-kb compile websocket-vs-sse   # Compile specific topic (force)
-kb compile                    # Compile all topics with changed raw sources
-kb compile --full             # Force full recompilation of everything
+kb compile websocket-vs-sse   # One topic (force)
+kb compile                    # All changed topics
+kb compile --full             # Force full recompilation
 ```
-
-Workflow:
-1. Computes sourceHash for each topic's raw files
-2. Compares against `graph.json` — skips unchanged topics
-3. For changed topics: sends raw sources (+ existing article if updating) to LLM
-4. LLM produces structured wiki article with frontmatter
-5. LLM also extracts related topics → markdown links in article body
-6. Runs `kb index` to rebuild `graph.json` and `INDEX.md`
 
 ### `kb index`
 
@@ -212,54 +104,96 @@ Rebuild `graph.json` and regenerate `INDEX.md`.
 kb index
 ```
 
-Scans wiki articles, parses frontmatter and internal links, runs LLM-based semantic clustering for categories, and writes both `graph.json` and `INDEX.md`. Normally called automatically after `kb compile`, but can be run standalone after manual wiki edits (e.g., editing in Obsidian).
-
 ### `kb status`
 
-Check KB health and staleness.
+Check KB health.
 
 ```bash
-kb status                     # Overview of all topics
-kb status websocket-vs-sse    # Detailed status of one topic
+kb status                     # All topics
+kb status websocket-vs-sse    # One topic
 ```
 
-Reports:
-- Topics with raw sources but no compiled article (pending compilation)
-- Articles where sourceHash is stale (raw sources changed)
-- Articles flagged as potentially stale by dependency propagation
-- Articles that haven't been updated in a configurable period
-- Orphaned articles (no raw sources)
-- Graph health (disconnected nodes, empty categories)
+### `kb query <question>`
+
+Ask a question against the KB. Answers are synthesized from relevant articles.
+
+```bash
+kb query "What auth flow should I use for a mobile app?"
+kb query "WebSocket vs SSE tradeoffs" --save   # Save answer as a new wiki article
+```
 
 ### `kb lint`
 
-Validate KB structure and content quality.
+Validate structure and content.
 
 ```bash
-kb lint                       # Lint all articles
-kb lint websocket-vs-sse      # Lint specific article
+kb lint                       # Structural checks (fast)
+kb lint --semantic             # Include LLM-powered checks (contradictions, gaps, suggestions)
 ```
-
-Checks:
-- Broken internal links between articles
-- `graph.json` consistency (nodes match wiki files, edges are valid)
-- Articles without summaries or tags in frontmatter
-- Missing `INDEX.md` entries
-- Structural issues (missing frontmatter, etc.)
 
 ### `kb serve`
 
-Launch a local Docus dev server for the KB site.
+Start a local Docus dev server (requires `--with-site` setup).
 
 ```bash
-kb serve                      # Start local dev server
+kb serve
 ```
 
-Requires Docus to be configured (`kb init --with-site` or manual setup).
+## Knowledge Graph
 
-## Wiki Article Format
+`kb` maintains a `graph.json` that maps the structure of your knowledge base, inspired by Microsoft's [RPG-Encoder](https://arxiv.org/abs/2602.02084) for repository representation.
 
-Each compiled article follows a consistent structure:
+The graph has two node types:
+
+- **Categories** — Semantic groupings (e.g., "Networking", "Auth") auto-generated by LLM clustering
+- **Articles** — Individual wiki documents with metadata and source hashes
+
+And two edge types:
+
+- **Functional** — Category → article (containment)
+- **Dependency** — Article → article (references)
+
+This enables:
+
+- **Incremental compilation** — Source hashes in the graph track what changed. Only modified topics are recompiled, like RPG-Encoder's 95.7% cost reduction.
+- **Staleness propagation** — When article A changes, articles that depend on A are flagged as potentially stale.
+- **Structured navigation** — `INDEX.md` is generated from the graph, organized by categories. AI agents use a "Search → Zoom" pattern: scan categories, find the right one, drill into articles.
+
+## Using KB Articles in Projects
+
+KB articles are consumed through [ASK](https://github.com/pleaseai/ask), which handles the last mile of making documents available to AI coding agents:
+
+```bash
+# In your project — pull a specific article
+ask docs add github:my-org/team-kb --docs-path wiki/websocket-vs-sse.md
+
+# Pull everything
+ask docs add github:my-org/team-kb --docs-path wiki/
+
+# Keep in sync
+ask docs sync
+```
+
+ASK stores the articles locally, generates Claude Code skills, and updates `AGENTS.md` — so your AI agent can reference accurate team knowledge while coding.
+
+## KB Structure
+
+```
+my-team-kb/
+├── raw/                    # Unprocessed source material
+│   └── <topic>/
+│       └── *.md
+├── wiki/                   # Compiled articles (LLM-generated)
+│   └── <topic>.md
+├── graph.json              # Knowledge graph
+├── INDEX.md                # Auto-generated from graph.json
+├── log.md                  # Append-only activity log
+└── kb.config.json          # Configuration
+```
+
+### Article Format
+
+Each wiki article has YAML frontmatter and a "Related" section for graph edges:
 
 ```markdown
 ---
@@ -275,102 +209,45 @@ sources:
 
 # WebSocket vs SSE
 
-Article content here...
+Article content...
 
 ## Related
 
-- [HTTP/2 Streams](http2-streams.md) — HTTP/2's multiplexed streams as an alternative
-- [gRPC Basics](grpc-basics.md) — Uses HTTP/2 streams for bidirectional RPC
-
-## References
-
-- [MDN WebSocket API](https://developer.mozilla.org/en-US/docs/Web/API/WebSocket)
-- [HTML Spec: Server-Sent Events](https://html.spec.whatwg.org/multipage/server-sent-events.html)
+- [HTTP/2 Streams](http2-streams.md) — Multiplexed streams as an alternative
+- [gRPC Basics](grpc-basics.md) — Uses HTTP/2 for bidirectional RPC
 ```
 
-The "Related" section is key — these internal links are parsed by `kb index` to build dependency edges in `graph.json`. The LLM generates these during compilation based on existing articles in the KB.
+### INDEX.md
 
-## INDEX.md Format
-
-Generated from `graph.json`. Structured by categories for human browsing and agent navigation.
+Auto-generated from `graph.json`, organized by semantic categories:
 
 ```markdown
-# Knowledge Base Index
-
-> Auto-generated by `kb index`. Do not edit manually.
-> Last updated: 2026-04-08
-
 ## Networking
 
 Network protocols, real-time communication, and transport layers.
 
 | Topic | Summary | Tags | Updated |
 |-------|---------|------|---------|
-| [WebSocket vs SSE](wiki/websocket-vs-sse.md) | Comparison of WebSocket and SSE for real-time communication | networking, real-time | 2026-04-08 |
-| [HTTP/2 Streams](wiki/http2-streams.md) | Multiplexed streams in HTTP/2 and their use cases | networking, http2 | 2026-03-20 |
-
-## Auth
-
-Authentication, authorization, and identity management.
-
-| Topic | Summary | Tags | Updated |
-|-------|---------|------|---------|
-| [OAuth2 Flows](wiki/oauth2-flows.md) | Overview of OAuth2 grant types and when to use each | auth, oauth | 2026-03-15 |
-| [JWT Tokens](wiki/jwt-tokens.md) | Structure, signing, and validation of JSON Web Tokens | auth, jwt | 2026-03-10 |
+| [WebSocket vs SSE](wiki/websocket-vs-sse.md) | Comparison of WebSocket and SSE... | networking, real-time | 2026-04-08 |
 ```
 
-This mirrors RPG's "Search-then-Zoom" pattern: an agent reads INDEX.md (broad topology), finds the relevant category, then navigates to the specific article.
+## Browsing & Deployment
 
-## Integration with Docus
+### Obsidian
 
-The KB repo can optionally be deployed as a documentation site using [Docus](https://docus.dev). This provides:
+The KB repo is a valid Obsidian vault. Open the repo root in Obsidian to get full-text search, graph view, and a nice reading experience. All links use standard markdown syntax.
 
-- **Full-text search** — Built-in search across all wiki articles
-- **Web access** — Team members browse KB without cloning the repo
-- **LLMs integration** — Docus generates `llms.txt` and `llms-full.txt` automatically, making the KB site discoverable by AI tools
-- **MCP server** — Docus's native MCP server lets AI tools query the KB directly
+### Docus Site
 
-### Setup
+Deploy the KB as a searchable documentation site:
 
 ```bash
-kb init my-team-kb --with-site    # Scaffolds Docus config alongside KB structure
+kb init my-team-kb --with-site    # Scaffold with Docus config
+kb serve                          # Local dev server
+bun run build                     # Build for deployment
 ```
 
-This generates a `nuxt.config.ts` that points Docus at the `wiki/` directory. The site reads directly from the wiki markdown files — no content duplication.
-
-### Deployment
-
-Deploy to any static host (Cloudflare Pages, Vercel, Netlify):
-
-```bash
-cd my-team-kb
-bun run build          # Builds the Docus site
-```
-
-The KB site becomes a fourth consumption channel alongside Obsidian, ASK, and direct git access.
-
-## Integration with ASK
-
-KB articles are consumed by projects through ASK's existing GitHub source adapter:
-
-```bash
-# In a project — pull a specific KB article
-ask docs add github:my-org/team-kb --docs-path wiki/websocket-vs-sse.md
-
-# Pull all KB articles
-ask docs add github:my-org/team-kb --docs-path wiki/
-
-# Keep in sync
-ask docs sync
-```
-
-ASK handles storing the documents locally, generating skills, and updating AGENTS.md. The KB tool does not need to know about ASK.
-
-## Integration with Obsidian
-
-The KB repo is a valid Obsidian vault. Open the repo root in Obsidian to browse and search articles with graph view. All links use standard markdown link syntax (`[text](path.md)`) for maximum compatibility.
-
-Obsidian's graph view and `graph.json` represent the same relationships from different angles — Obsidian derives its graph from markdown links, `graph.json` adds sourceHash, categories, and semantic features on top.
+Deploys to Cloudflare Pages, Vercel, or Netlify. Provides full-text search, web access for the whole team, and AI-ready endpoints (`llms.txt`, MCP server) via Docus.
 
 ## Configuration
 
@@ -384,62 +261,33 @@ Obsidian's graph view and `graph.json` represent the same relationships from dif
     "model": "claude-sonnet-4-20250514"
   },
   "staleness": {
-    "warnAfterDays": 90,
-    "checkUrls": false
-  },
-  "compile": {
-    "systemPrompt": null,
-    "articleTemplate": null
+    "warnAfterDays": 90
   },
   "site": {
     "enabled": false,
-    "title": "Team KB",
-    "url": null
+    "title": "Team KB"
   }
 }
 ```
 
-## LLM Delegation Model
+## Design Principles
 
-`kb` follows the same architectural principle as ASK: the CLI orchestrates, but LLMs do the heavy lifting. Specifically:
+- **Structured over raw** — Compiled articles beat document dumps. AI agents perform dramatically better with structured, focused documents than with large unstructured text.
+- **Knowledge compounds** — Queries saved as articles, lint-discovered gaps filled with new research, cross-references maintained automatically. The KB gets richer with every interaction, not just every source added.
+- **Incremental over full** — Only recompile what changed. Source hashes in `graph.json` make compilation as efficient as `make`.
+- **Graph over flat index** — Semantic categories and dependency edges enable agents to navigate efficiently via "Search → Zoom" rather than scanning a flat list.
+- **GitHub is the backend** — Version history, PRs for review, branching for concurrent edits, CI for automation. No custom infrastructure.
+- **LLMs compile, humans curate** — The LLM does all the grunt work — summarizing, cross-referencing, filing, bookkeeping. Humans decide what to research and review what gets published.
+- **Four consumption channels** — Obsidian (local), Docus (web), ASK (AI agents), git (raw access). Same content, different interfaces.
 
-- **Compilation** — Raw sources → LLM → structured wiki article with frontmatter, related links, and references
-- **Category clustering** — During `kb index`, LLM groups articles into semantic categories for the graph
-- **Index generation** — Deterministic: reads `graph.json`, writes `INDEX.md`
-- **Linting** — Structural checks are deterministic; content quality checks can optionally use an LLM
-- **Staleness** — Date/hash comparison is deterministic; optionally an LLM can check if content is still accurate
+## Related
 
-The compilation prompt instructs the LLM to:
-1. Synthesize all raw sources into a coherent article
-2. Resolve contradictions between sources (prefer more recent)
-3. Add frontmatter (title, summary, tags, dates, source references)
-4. Use clear structure with headings
-5. Add a "Related" section linking to relevant existing KB articles
-6. Preserve links to original references
+- [Karpathy's LLM Wiki](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f) — The pattern that inspired `kb`: LLMs maintain a persistent, compounding wiki instead of rediscovering knowledge from scratch on every query.
+- [@pleaseai/ask](https://github.com/pleaseai/ask) — Downloads version-specific library docs for AI agents. Consumes KB articles via its GitHub source adapter.
+- [@pleaseai/soop](https://github.com/pleaseai/soop) — TypeScript implementation of RPG/RPG-Encoder. `kb`'s graph design is based on soop's RPG structure; future versions may reuse soop's graph primitives and navigation tools directly.
+- [RPG / RPG-Encoder](https://arxiv.org/abs/2602.02084) — Microsoft's graph representation for code repositories. Inspired `graph.json` design and incremental compilation.
+- [Docus](https://docus.dev) — Markdown documentation site generator. Powers the optional KB site deployment.
 
-## Tech Stack
+## License
 
-| Category | Technology |
-|---|---|
-| Runtime | Node.js (Pure ESM) |
-| Language | TypeScript |
-| CLI framework | citty (unjs) |
-| Logging | consola |
-| LLM | Anthropic SDK (default), extensible |
-| Site | Docus (optional) |
-| Package manager | bun |
-
-## Open Questions
-
-1. **Multiple KB repos** — Should `kb` support linking multiple KB repos (e.g., team KB + personal KB)? Or keep it single-repo for simplicity?
-2. **Conflict resolution** — When two people compile the same topic concurrently, git handles file conflicts. Is that sufficient, or do we need article-level merge logic?
-3. **Image handling** — How to handle images referenced in raw sources? Copy to repo, or external links only?
-4. **CI integration** — Should we ship a GitHub Action for automated staleness checks, lint, and incremental compilation on push?
-5. **Category depth** — Should categories support nesting (subcategories)? RPG uses multi-level hierarchy, but flat categories may be simpler to start.
-
-## References
-
-- [RPG: A Repository Planning Graph](https://arxiv.org/abs/2509.16198) (ICLR 2026) — Graph representation for code repositories; foundational design for `graph.json`
-- [RPG-Encoder: Closing the Loop](https://arxiv.org/abs/2602.02084) — Incremental encoding, agent navigation interface (SearchNode/FetchNode/ExploreRPG)
-- [ASK Nuxt UI Evals](https://github.com/pleaseai/ask/tree/main/evals/nuxt-ui) — Evidence that structured docs outperform unstructured dumps for AI agents
-- [Docus](https://docus.dev) — Markdown documentation site generator with built-in search and LLMs integration
+MIT
