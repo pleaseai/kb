@@ -1,0 +1,25 @@
+packages/kb/test/status.test.ts
+  19576fa5f9347f18 115
+packages/kb/src/commands/status/analyze.ts
+  19576fa5f9347f18 9,114,117
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.5",
+  "base_commit_sha": "2076d4e2ad2088212c25707490719106241349c2",
+  "prompts": {
+    "19576fa5f9347f18": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "12f02ae1-8af1-4b95-b112-ebab4eca3cb0",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Minsu Lee",
+      "messages": [],
+      "total_additions": 5,
+      "total_deletions": 4,
+      "accepted_lines": 5,
+      "overriden_lines": 0
+    }
+  }
+}
