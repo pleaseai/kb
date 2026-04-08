@@ -1,0 +1,4 @@
+[install]
+# Use hoisted node_modules layout (flat) instead of Bun's default isolated layout.
+# Required for tooling that expects a traditional node_modules structure.
+linker = "hoisted"
