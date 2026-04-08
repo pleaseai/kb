@@ -1,1 +1,1 @@
-export const name = '@pleaseai/kb'
+export const name = "@pleaseai/kb";

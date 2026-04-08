@@ -12,14 +12,25 @@
     "kb": "./dist/cli.mjs"
   },
   "scripts": {
-    "build": "echo 'TODO: configure build'",
-    "dev": "echo 'TODO: configure dev'",
+    "build": "unbuild",
+    "dev": "unbuild --stub",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "test": "echo 'TODO: configure test'",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
-    "typescript": "catalog:"
+    "@types/node": "^25.5.2",
+    "typescript": "catalog:",
+    "unbuild": "^3.6.1",
+    "vitest": "^4.1.3"
+  },
+  "dependencies": {
+    "citty": "^0.2.2",
+    "consola": "^3.4.2",
+    "defu": "^6.1.7",
+    "pathe": "^2.0.3",
+    "zod": "^4.3.6"
   }
 }
