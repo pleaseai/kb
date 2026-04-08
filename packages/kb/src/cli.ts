@@ -2,6 +2,7 @@
 import { defineCommand, runMain } from 'citty'
 import { ingestCommand } from './commands/ingest'
 import { initCommand } from './commands/init'
+import { statusCommand } from './commands/status'
 
 const main = defineCommand({
   meta: {
@@ -12,6 +13,7 @@ const main = defineCommand({
   subCommands: {
     init: initCommand,
     ingest: ingestCommand,
+    status: statusCommand,
   },
 })
 

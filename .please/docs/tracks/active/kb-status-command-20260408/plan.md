@@ -18,19 +18,19 @@ src/commands/status/
 
 ### Phase 1 — Analyzer
 
-- [ ] **T-001** Define `StatusReport` zod schema in `types.ts`
-- [ ] **T-002** Implement `walkRaw()` to count topics and sources (TDD against fixture KB)
-- [ ] **T-003** Implement `walkWiki()` to list wiki files (TDD)
-- [ ] **T-004** Implement `detectStale()` comparing raw source hashes to graph-recorded hashes (TDD — depends on graph reader from kb-graph-schema track)
-- [ ] **T-005** Implement `detectOrphans()` comparing wiki files to graph nodes (TDD)
-- [ ] **T-006** Compose into `analyze(kbRoot)` → `StatusReport`
+- [x] T001 Define StatusReport zod schema (file: packages/kb/src/commands/status/types.ts)
+- [x] T002 Implement walkRaw() to count topics and sources (file: packages/kb/src/commands/status/analyze.ts)
+- [x] T003 Implement walkWiki() to list wiki files (file: packages/kb/src/commands/status/analyze.ts)
+- [x] T004 Implement detectStale() comparing raw source hashes to graph-recorded hashes (file: packages/kb/src/commands/status/analyze.ts)
+- [x] T005 Implement detectOrphans() comparing wiki files to graph nodes (file: packages/kb/src/commands/status/analyze.ts)
+- [x] T006 Compose into analyze(kbRoot) returning StatusReport (file: packages/kb/src/commands/status/analyze.ts)
 
 ### Phase 2 — CLI
 
-- [ ] **T-007** Human formatter with consola (colored summary table)
-- [ ] **T-008** `--json` flag wiring and schema validation
-- [ ] **T-009** Wire `status` command into `cli.ts`
-- [ ] **T-010** Integration test: init → ingest → status (depends on ingest track)
+- [x] T007 Human formatter with consola colored summary (file: packages/kb/src/commands/status/format.ts)
+- [x] T008 --json flag wiring and schema validation (file: packages/kb/src/commands/status/index.ts)
+- [x] T009 Wire status command into cli.ts (file: packages/kb/src/cli.ts)
+- [x] T010 Integration test: init -> ingest -> status (file: packages/kb/test/status.integration.test.ts)
 
 ## Testing Strategy
 
