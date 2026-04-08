@@ -1,0 +1,36 @@
+bunfig.toml
+  eacd5cfefac4f1fd 1-4
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.5",
+  "base_commit_sha": "c340c6806618b59548bbb31d72474965e58f1385",
+  "prompts": {
+    "eacd5cfefac4f1fd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6199bc13-69f0-4c86-9c98-50c68d019f2c",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Minsu Lee",
+      "messages": [],
+      "total_additions": 4,
+      "total_deletions": 0,
+      "accepted_lines": 4,
+      "overriden_lines": 0
+    },
+    "ee740bd1e7592ac9": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "1d915ee9-212a-4be6-8cf4-0f4e28acbf4f",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Minsu Lee",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 5,
+      "overriden_lines": 0
+    }
+  }
+}
