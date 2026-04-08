@@ -1,0 +1,41 @@
+packages/kb/src/commands/ingest/types.ts
+  d85db7cd3a892a38 1-28
+packages/kb/src/commands/ingest/inputs/url.ts
+  d85db7cd3a892a38 1-105
+packages/kb/src/commands/ingest/inputs/clipboard.ts
+  d85db7cd3a892a38 2-60
+README.md
+  d85db7cd3a892a38 83-86,89-91
+packages/kb/src/commands/ingest/writer.ts
+  d85db7cd3a892a38 2-3,5-95
+packages/kb/test/ingest.test.ts
+  d85db7cd3a892a38 1-6,8,10,12-255
+packages/kb/src/commands/ingest/inputs/file.ts
+  d85db7cd3a892a38 2-39
+packages/kb/src/commands/ingest/index.ts
+  d85db7cd3a892a38 2-4,6-7,9,11-148
+packages/kb/src/cli.ts
+  d85db7cd3a892a38 3,14
+packages/kb/src/commands/ingest/inputs/interactive.ts
+  d85db7cd3a892a38 1,3-8,10-60
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.5",
+  "base_commit_sha": "0f3507b67c2b0c953dbcd96f71651c91750ea7f9",
+  "prompts": {
+    "d85db7cd3a892a38": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "dc555430-3c7b-4ac3-a091-f368d336b7f6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Minsu Lee",
+      "messages": [],
+      "total_additions": 834,
+      "total_deletions": 37,
+      "accepted_lines": 787,
+      "overriden_lines": 2
+    }
+  }
+}
