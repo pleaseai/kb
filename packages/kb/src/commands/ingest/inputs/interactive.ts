@@ -1,5 +1,6 @@
 import type { Source } from '../types'
 import { consola } from 'consola'
+import { assertSafePathSegment } from '../writer'
 
 const COLON_DOT_RE = /[:.]/g
 
@@ -41,6 +42,7 @@ export async function runInteractiveInput(
     ?? (await prompter.prompt('Topic (folder under raw/):', { type: 'text' }))
   if (!topic || !topic.trim())
     throw new Error('Topic is required')
+  assertSafePathSegment('topic', topic.trim())
 
   const content = await prompter.prompt('Paste or type source content:', {
     type: 'text',

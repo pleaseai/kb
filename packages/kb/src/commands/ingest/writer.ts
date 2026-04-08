@@ -7,9 +7,26 @@ import { join } from 'pathe'
 const FRONTMATTER_FENCE = '---'
 const HASH_LINE_RE = /^sourceHash:\s*"?([a-f0-9]{64})"?\s*$/m
 const QUOTE_RE = /"/g
+const UNSAFE_PATH_RE = /[/\\\0]|^\.\.?$|(?:^|\/)\.\.(?:\/|$)/
 
 export function sha256(content: string): string {
   return createHash('sha256').update(content, 'utf8').digest('hex')
+}
+
+/**
+ * Reject path segments (topic, filename) that contain separators, parent
+ * references, or null bytes. These would allow a malicious source to escape
+ * the KB's `raw/` directory and write anywhere on disk.
+ */
+export function assertSafePathSegment(label: string, value: string): void {
+  if (!value || !value.trim()) {
+    throw new Error(`${label} must not be empty`)
+  }
+  if (UNSAFE_PATH_RE.test(value)) {
+    throw new Error(
+      `${label} contains unsafe path characters (separators, '..', or null): ${JSON.stringify(value)}`,
+    )
+  }
 }
 
 function buildFrontmatter(
@@ -71,6 +88,8 @@ export async function writeRawSource(
   options: IngestOptions,
 ): Promise<IngestResult> {
   const { topic, source, rootDir } = options
+  assertSafePathSegment('topic', topic)
+  assertSafePathSegment('source.filename', source.filename)
   const now = options.now ?? (() => new Date())
   const topicDir = join(rootDir, 'raw', topic)
 

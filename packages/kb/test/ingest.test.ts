@@ -71,6 +71,33 @@ describe('writeRawSource', () => {
     await expect(stat(join(workDir, 'raw', 'demo', 'b.md'))).rejects.toThrow()
   })
 
+  it.each([
+    '../escape',
+    '..',
+    '.',
+    'foo/bar',
+    'foo\\bar',
+    'with\u0000null',
+  ])('rejects unsafe topic segment %s', async (bad) => {
+    await expect(
+      writeRawSource({
+        topic: bad,
+        rootDir: workDir,
+        source: { filename: 'a.md', content: 'x', origin: 'o' },
+      }),
+    ).rejects.toThrow(/unsafe path/)
+  })
+
+  it('rejects unsafe source.filename', async () => {
+    await expect(
+      writeRawSource({
+        topic: 'demo',
+        rootDir: workDir,
+        source: { filename: '../evil.md', content: 'x', origin: 'o' },
+      }),
+    ).rejects.toThrow(/unsafe path/)
+  })
+
   it('avoids overwriting existing non-duplicate files', async () => {
     await writeRawSource({
       topic: 'demo',
@@ -170,6 +197,14 @@ describe('runInteractiveInput', () => {
   it('throws when topic missing', async () => {
     const prompter = { prompt: async () => '' }
     await expect(runInteractiveInput({ prompter })).rejects.toThrow(/Topic/)
+  })
+
+  it('rejects unsafe interactive topic (path traversal)', async () => {
+    const answers = ['../escape', 'body']
+    const prompter = { prompt: async () => answers.shift() ?? '' }
+    await expect(runInteractiveInput({ prompter })).rejects.toThrow(
+      /unsafe path/,
+    )
   })
 })
 
