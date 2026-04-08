@@ -1,0 +1,25 @@
+{
+  "name": "@pleaseai/kb",
+  "type": "module",
+  "version": "0.0.0",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs"
+    }
+  },
+  "bin": {
+    "kb": "./dist/cli.mjs"
+  },
+  "scripts": {
+    "build": "echo 'TODO: configure build'",
+    "dev": "echo 'TODO: configure dev'",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "test": "echo 'TODO: configure test'",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "catalog:"
+  }
+}
