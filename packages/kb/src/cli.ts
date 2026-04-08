@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import { defineCommand, runMain } from "citty";
+import { initCommand } from "./commands/init";
 
 const main = defineCommand({
   meta: {
@@ -7,7 +8,9 @@ const main = defineCommand({
     version: "0.0.0",
     description: "Knowledge base CLI",
   },
-  subCommands: {},
+  subCommands: {
+    init: initCommand,
+  },
 });
 
 void runMain(main);

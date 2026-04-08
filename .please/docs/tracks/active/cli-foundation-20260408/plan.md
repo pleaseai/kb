@@ -38,14 +38,14 @@ Deliver the first shippable slice of `@pleaseai/kb`: a working `kb` binary that 
 
 ## Tasks
 
-- [ ] **T-001**: Add runtime deps and build tooling
+- [x] **T-001**: Add runtime deps and build tooling
   - Add `citty`, `consola`, `zod`, `defu`, `pathe` to `packages/kb` deps
   - Add `unbuild`, `vitest` to devDeps
   - Add `build.config.ts` (unbuild entries: `src/index`, `src/cli`)
   - Wire `package.json` scripts: `build`, `dev`, `test`
   - Verify `bun run build` produces `dist/cli.mjs` and `dist/index.mjs`
 
-- [ ] **T-002**: CLI entry point (US-2)
+- [x] **T-002**: CLI entry point (US-2)
   - Create `src/cli.ts` with citty `defineCommand` root command
   - Register `init` subcommand (stub for now — implemented in T-004)
   - `kb --version` reads version from `package.json` at build time
@@ -53,14 +53,14 @@ Deliver the first shippable slice of `@pleaseai/kb`: a working `kb` binary that 
   - Unknown subcommand surfaces a consola error listing available commands
   - Add shebang `#!/usr/bin/env node` to the built CLI
 
-- [ ] **T-003**: Config schema and loader (US-3)
+- [x] **T-003**: Config schema and loader (US-3)
   - `src/config/schema.ts`: zod schema matching SPEC.md §Configuration (version, llm, staleness, compile, site)
   - `src/config/defaults.ts`: default config values
   - `src/config/load.ts`: walk from cwd up to filesystem root looking for `kb.config.json`; validate with zod; warn on unknown keys via consola; return `{ config, rootDir }`
   - `src/config/load.ts` throws a typed `KbConfigNotFoundError` when no config is found (commands decide whether to call it)
   - Tests: found in cwd, found in ancestor, not found, invalid schema, unknown key warning
 
-- [ ] **T-004**: `kb init` command (US-1)
+- [x] **T-004**: `kb init` command (US-1)
   - `src/commands/init.ts`: citty subcommand with positional `[directory]` and `--with-site` flag
   - Target dir resolves to `cwd` if no arg, else `path.resolve(cwd, arg)`
   - Creates `raw/`, `wiki/`, `kb.config.json`, `graph.json` (empty graph stub), `INDEX.md` (header-only stub), `log.md` (header-only stub), `.gitignore`
@@ -69,11 +69,11 @@ Deliver the first shippable slice of `@pleaseai/kb`: a working `kb` binary that 
   - Templates live as string constants in `src/commands/init/templates.ts`
   - Tests: init in empty dir, init with new subdir, init with `--with-site`, init refuses when config exists
 
-- [ ] **T-005**: Package entry exports
+- [x] **T-005**: Package entry exports
   - `src/index.ts` re-exports: config schema type, `loadConfig`, `KbConfigNotFoundError`, default config
   - Ensures downstream tracks (graph, compile) can import from `@pleaseai/kb` as a library, not just a CLI
 
-- [ ] **T-006**: End-to-end smoke test
+- [x] **T-006**: End-to-end smoke test
   - Vitest e2e test that spawns the built `dist/cli.mjs` via `node:child_process` in a temp dir, runs `init`, then verifies the scaffolded structure and that `loadConfig` can read it back
   - Guarantees build + CLI + loader actually compose correctly
 
@@ -125,7 +125,7 @@ All must pass before marking the track complete.
 
 ## Progress
 
-- Tasks: 0/6 complete
+- Tasks: 6/6 complete
 - Last updated: 2026-04-08
 
 ## Decision Log
