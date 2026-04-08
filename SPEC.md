@@ -381,6 +381,52 @@ Incremental: 3 topics recompiled (sourceHash mismatch), 12 unchanged, 1 new.
 
 The consistent prefix format (`## [date] verb | subject`) makes the log parseable with simple tools: `grep "^## \[" log.md | tail -10` gives the last 10 entries.
 
+## Rollout — Phase 1: GitHub Action Automation
+
+Phase 1 keeps `kb` as a local CLI authoring tool and moves compile/index orchestration into GitHub Actions. No server, no web app — the KB repo itself is the runtime. This removes per-author model/prompt drift, makes wiki updates reviewable as PR diffs, and avoids the complexity of a webhook service until there is real demand for it.
+
+### Goals
+
+- Changes to `raw/` arrive as PRs; `wiki/` is produced and committed by Actions, not by individual machines.
+- A single execution environment eliminates variance between contributors' local LLM setups.
+- Reviewers see the `raw/` diff and the resulting `wiki/` diff side-by-side before merge (human-in-the-loop, Karpathy-style).
+
+### Components
+
+1. **`kb` CLI** — unchanged from the rest of this spec. Used locally for `ingest`, `query`, and Obsidian-based authoring.
+2. **`.github/workflows/compile.yml`** — on push to `main` touching `raw/**`, runs `kb compile && kb index` via Claude Code Action and commits the resulting `wiki/`, `graph.json`, and `INDEX.md` as a bot commit.
+3. **`.github/workflows/preview.yml`** — on pull requests touching `raw/**`, runs the same commands in a throwaway workspace and posts the `wiki/` diff as a PR comment. Nothing is committed.
+4. **`.github/workflows/lint.yml`** — runs `kb lint` (structural) on every PR. `kb lint --semantic` runs on a nightly schedule and opens an issue when findings exist, keeping LLM cost predictable.
+
+### Trigger Matrix
+
+| Event | Workflow | Action |
+|---|---|---|
+| `push` to `main` (raw/** changed) | compile.yml | `kb compile` → bot commits updated wiki |
+| `pull_request` (raw/** changed) | preview.yml | `kb compile` → wiki diff as PR comment |
+| `pull_request` (any) | lint.yml | `kb lint` structural checks |
+| `schedule` (nightly) | lint.yml | `kb lint --semantic` → opens issue on findings |
+
+### Design Decisions
+
+- **Direct commits vs bot-opens-PR** — Phase 1 commits directly to `main` from the bot for simplicity. When team size or review load justifies it, switch to a "bot opens a PR with the compiled wiki" model. Tracked as a Phase 2 transition point.
+- **Concurrency** — all compile workflows share `concurrency: kb-compile` to serialize writes and avoid `graph.json` races.
+- **Secrets** — `ANTHROPIC_API_KEY` is a repository secret. Preview workflows do not run on forked PRs to prevent secret exposure; forks get a manual "run preview" affordance instead.
+- **Cost guard** — `kb compile` is incremental by default, so steady-state cost is low. `kb compile --full` is only exposed via `workflow_dispatch` to prevent accidental full rebuilds.
+- **CLI parity** — Actions invoke the exact same `kb` binary contributors run locally. No server-side reimplementation of compile logic.
+
+### Out of Scope for Phase 1
+
+- Web chat UI — deferred to Phase 3, after Docus + MCP validates real demand for conversational access.
+- Webhook service or real-time compilation — unnecessary complexity for a CI-shaped workload.
+- External notification channels (Slack, email) for staleness — Phase 2.
+
+### Exit Criteria → Phase 2
+
+- Every merged `raw/` PR produces a consistent wiki update with zero manual intervention.
+- Monthly Actions + LLM cost is measured and within an agreed budget.
+- At least one contributor has landed a KB change end-to-end via PR only, without running the CLI locally.
+
 ## Integration with Docus
 
 The KB repo can optionally be deployed as a documentation site using [Docus](https://docus.dev). This provides:
