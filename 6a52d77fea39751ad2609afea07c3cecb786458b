@@ -1,0 +1,51 @@
+codecov.yml
+  31ab44413d060fab 1-44
+.github/workflows/ci.yml
+  31ab44413d060fab 1-57
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.5",
+  "base_commit_sha": "6a52d77fea39751ad2609afea07c3cecb786458b",
+  "prompts": {
+    "31ab44413d060fab": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c6c986c1-e8f7-4363-bb5a-269f9d5c2483",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Minsu Lee",
+      "messages": [],
+      "total_additions": 101,
+      "total_deletions": 0,
+      "accepted_lines": 101,
+      "overriden_lines": 0
+    },
+    "ee740bd1e7592ac9": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "1d915ee9-212a-4be6-8cf4-0f4e28acbf4f",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Minsu Lee",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 5,
+      "overriden_lines": 0
+    },
+    "f80d48b3e79ee54e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9912c6e4-5e27-4fe7-b2e1-50aed134aa7d",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Minsu Lee",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 3,
+      "overriden_lines": 0
+    }
+  }
+}
