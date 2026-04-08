@@ -5,13 +5,13 @@ import { defineCommand } from "citty";
 import { consola } from "consola";
 import {
   GITIGNORE_TEMPLATE,
-  GRAPH_JSON_TEMPLATE,
   INDEX_MD_TEMPLATE,
   KB_CONFIG_TEMPLATE,
   LOG_MD_TEMPLATE,
   NUXT_CONFIG_TEMPLATE,
 } from "./init/templates";
 import { KB_CONFIG_FILENAME } from "../config/load";
+import { createEmptyGraph, saveGraph, GRAPH_FILENAME } from "../graph";
 
 export interface InitOptions {
   directory?: string;
@@ -50,7 +50,6 @@ export async function runInit(options: InitOptions = {}): Promise<InitResult> {
 
   const writes: Array<[string, string]> = [
     [KB_CONFIG_FILENAME, KB_CONFIG_TEMPLATE],
-    ["graph.json", GRAPH_JSON_TEMPLATE],
     ["INDEX.md", INDEX_MD_TEMPLATE],
     ["log.md", LOG_MD_TEMPLATE],
     [".gitignore", GITIGNORE_TEMPLATE],
@@ -65,6 +64,9 @@ export async function runInit(options: InitOptions = {}): Promise<InitResult> {
     await writeFile(target, content, "utf8");
     created.push(target);
   }
+
+  await saveGraph(rootDir, createEmptyGraph());
+  created.push(join(rootDir, GRAPH_FILENAME));
 
   return {
     rootDir,

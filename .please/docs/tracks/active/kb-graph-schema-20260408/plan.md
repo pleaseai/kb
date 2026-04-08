@@ -18,22 +18,22 @@ Atomic write: serialize to `graph.json.tmp`, `fs.rename` to `graph.json`. Valida
 
 ### Phase 1 — Schema
 
-- [ ] **T-001** Define zod schemas for `CategoryNode`, `ArticleNode`, `Edge` (TDD: schema tests with valid + invalid samples)
-- [ ] **T-002** Compose top-level `GraphSchema` with `version`, `lastUpdated`, `nodes`, `edges`
-- [ ] **T-003** Export `GraphParseError` with structured issue array
+- [x] **T-001** Define zod schemas for `CategoryNode`, `ArticleNode`, `Edge` (TDD: schema tests with valid + invalid samples)
+- [x] **T-002** Compose top-level `GraphSchema` with `version`, `lastUpdated`, `nodes`, `edges`
+- [x] **T-003** Export `GraphParseError` with structured issue array
 
 ### Phase 2 — Store
 
-- [ ] **T-004** Implement `createEmptyGraph()` helper (TDD)
-- [ ] **T-005** Implement `loadGraph(kbRoot)` with validation and error wrapping (TDD)
-- [ ] **T-006** Implement `saveGraph(kbRoot, graph)` with atomic tmp+rename and `lastUpdated` refresh (TDD)
-- [ ] **T-007** Round-trip integration test
+- [x] **T-004** Implement `createEmptyGraph()` helper (TDD)
+- [x] **T-005** Implement `loadGraph(kbRoot)` with validation and error wrapping (TDD)
+- [x] **T-006** Implement `saveGraph(kbRoot, graph)` with atomic tmp+rename and `lastUpdated` refresh (TDD)
+- [x] **T-007** Round-trip integration test
 
 ### Phase 3 — Integration
 
-- [ ] **T-008** Update `kb init` to use `createEmptyGraph()` + `saveGraph()`
-- [ ] **T-009** Public re-export from `src/index.ts`
-- [ ] **T-010** Coverage verification (>90%)
+- [x] **T-008** Update `kb init` to use `createEmptyGraph()` + `saveGraph()`
+- [x] **T-009** Public re-export from `src/index.ts`
+- [x] **T-010** Coverage verification (>90%)
 
 ## Testing Strategy
 
