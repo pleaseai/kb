@@ -44,3 +44,20 @@ Atomic write: serialize to `graph.json.tmp`, `fs.rename` to `graph.json`. Valida
 ## Risks
 
 - SPEC.md may evolve the graph shape. Mitigate by keeping `version: 1` and documenting the schema in a single file so future migrations are localized.
+
+## Outcomes & Retrospective
+
+### What Was Shipped
+- `packages/kb/src/graph/` module: zod schemas (Graph/CategoryNode/ArticleNode/Edge), `GraphParseError`, and `createEmptyGraph`/`loadGraph`/`saveGraph` with atomic tmp+rename writes.
+- `kb init` now uses the store instead of a hard-coded JSON template.
+- 13 new vitest cases; all 25 tests in the package pass.
+
+### What Went Well
+- TDD flow kept the surface tight — no speculative helpers slipped in.
+- Validating before writing (`GraphSchema.parse` in `saveGraph`) guarantees we never persist a malformed graph.
+
+### What Could Improve
+- `@vitest/coverage-v8` is not installed, so SC-003 (>90% coverage) was validated by inspection rather than by tool. Worth adding to devDependencies later.
+
+### Tech Debt Created
+- Coverage tooling missing in `@pleaseai/kb` devDependencies.
