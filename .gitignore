@@ -26,3 +26,4 @@ bun.lock
 
 # please plugin runtime state
 .please/state/
+*.tsbuildinfo
