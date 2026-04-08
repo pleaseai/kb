@@ -1,0 +1,27 @@
+packages/kb/src/commands/ingest/writer.ts
+  d85db7cd3a892a38 10,16-29,91-92
+packages/kb/src/commands/ingest/inputs/interactive.ts
+  d85db7cd3a892a38 3,45
+packages/kb/test/ingest.test.ts
+  d85db7cd3a892a38 74-100,201-208
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.5",
+  "base_commit_sha": "72d0d5f9d7be228df134e27808097d3a28483e09",
+  "prompts": {
+    "d85db7cd3a892a38": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "dc555430-3c7b-4ac3-a091-f368d336b7f6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Minsu Lee",
+      "messages": [],
+      "total_additions": 57,
+      "total_deletions": 1,
+      "accepted_lines": 56,
+      "overriden_lines": 0
+    }
+  }
+}
