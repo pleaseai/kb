@@ -1,0 +1,44 @@
+coverage:
+  status:
+    project:
+      default:
+        target: auto
+        threshold: 1%
+    patch:
+      default:
+        target: auto
+        threshold: 1%
+
+component_management:
+  default_rules:
+    statuses:
+      - type: project
+        target: auto
+        threshold: 1%
+  individual_components:
+    - component_id: packages
+      name: packages
+      paths:
+        - packages/**
+
+flag_management:
+  default_rules:
+    carryforward: true
+    statuses:
+      - type: project
+        target: auto
+        threshold: 1%
+  individual_flags:
+    - name: component
+      paths:
+        - packages/**
+      carryforward: true
+    - name: test
+      paths:
+        - packages/**
+      carryforward: true
+
+comment:
+  layout: "header, diff, flags, components, files"
+  behavior: default
+  require_changes: false
