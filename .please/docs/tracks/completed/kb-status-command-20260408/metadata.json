@@ -1,10 +1,10 @@
 {
   "track_id": "kb-status-command-20260408",
   "type": "feature",
-  "status": "in_progress",
+  "status": "review",
   "created_at": "2026-04-08T08:04:35Z",
-  "updated_at": "2026-04-08T20:20:00Z",
+  "updated_at": "2026-04-08T20:25:00Z",
   "issue": "#3",
-  "pr": "https://github.com/pleaseai/kb/pull/5",
+  "pr": "#8",
   "project": ""
 }
