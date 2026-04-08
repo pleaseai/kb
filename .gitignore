@@ -3,12 +3,10 @@ node_modules/
 
 # Build outputs
 dist/
+coverage/
 
 # Turbo
 .turbo/
-
-# Bun
-bun.lock
 
 # Environment
 .env

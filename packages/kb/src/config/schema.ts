@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod'
 
 /**
  * LLM model identifier passed to the Vercel AI SDK.
@@ -7,23 +7,23 @@ import { z } from "zod";
  */
 const LlmSchema = z.object({
   model: z.string().min(1),
-});
+})
 
 const StalenessSchema = z.object({
   warnAfterDays: z.number().int().positive(),
   checkUrls: z.boolean(),
-});
+})
 
 const CompileSchema = z.object({
   systemPrompt: z.string().nullable(),
   articleTemplate: z.string().nullable(),
-});
+})
 
 const SiteSchema = z.object({
   enabled: z.boolean(),
   title: z.string(),
   url: z.string().nullable(),
-});
+})
 
 export const KbConfigSchema = z.object({
   version: z.literal(1),
@@ -31,6 +31,6 @@ export const KbConfigSchema = z.object({
   staleness: StalenessSchema,
   compile: CompileSchema,
   site: SiteSchema,
-});
+})
 
-export type KbConfig = z.infer<typeof KbConfigSchema>;
+export type KbConfig = z.infer<typeof KbConfigSchema>
