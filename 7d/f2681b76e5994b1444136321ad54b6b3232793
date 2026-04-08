@@ -1,0 +1,35 @@
+packages/kb/src/graph/schema.ts
+  43e63e60c9b98880 1-55
+packages/kb/src/index.ts
+  43e63e60c9b98880 14-28
+packages/kb/src/commands/init.ts
+  43e63e60c9b98880 14,68-70
+packages/kb/src/graph/errors.ts
+  43e63e60c9b98880 1-23
+packages/kb/src/graph/store.ts
+  43e63e60c9b98880 1-64
+packages/kb/src/graph/index.ts
+  43e63e60c9b98880 1-17
+packages/kb/test/graph.test.ts
+  43e63e60c9b98880 1-141
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.5",
+  "base_commit_sha": "7df2681b76e5994b1444136321ad54b6b3232793",
+  "prompts": {
+    "43e63e60c9b98880": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "00ba8b21-2da5-4c40-b666-d24d51096e8e",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Minsu Lee",
+      "messages": [],
+      "total_additions": 323,
+      "total_deletions": 17,
+      "accepted_lines": 319,
+      "overriden_lines": 0
+    }
+  }
+}
