@@ -23,3 +23,6 @@ bun.lock
 .vscode/
 *.swp
 *.swo
+
+# please plugin runtime state
+.please/state/
