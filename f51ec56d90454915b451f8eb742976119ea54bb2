@@ -1,0 +1,65 @@
+.please/docs/tracks.jsonl
+  eacd5cfefac4f1fd 1
+.please/docs/product-specs/index.md
+  eacd5cfefac4f1fd 1-6
+.please/docs/tracks/tech-debt-tracker.md
+  eacd5cfefac4f1fd 1-13
+.please/docs/knowledge/product.md
+  eacd5cfefac4f1fd 1-44
+.please/config.yml
+  ee740bd1e7592ac9 27-34
+  eacd5cfefac4f1fd 1-26
+.please/docs/decisions/index.md
+  eacd5cfefac4f1fd 1-6
+.please/docs/tracks/active/cli-foundation-20260408/metadata.json
+  eacd5cfefac4f1fd 1-11
+.please/docs/knowledge/tech-stack.md
+  eacd5cfefac4f1fd 1-58
+.gitignore
+  eacd5cfefac4f1fd 26-28
+.please/docs/knowledge/product-guidelines.md
+  eacd5cfefac4f1fd 1-32
+.please/docs/tracks/active/cli-foundation-20260408/spec.md
+  eacd5cfefac4f1fd 1-52
+.please/INDEX.md
+  eacd5cfefac4f1fd 1-35
+.please/docs/tracks/active/cli-foundation-20260408/plan.md
+  eacd5cfefac4f1fd 1-11
+.please/docs/knowledge/workflow.md
+  eacd5cfefac4f1fd 1-138
+ARCHITECTURE.md
+  eacd5cfefac4f1fd 1-113
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.5",
+  "base_commit_sha": "f51ec56d90454915b451f8eb742976119ea54bb2",
+  "prompts": {
+    "eacd5cfefac4f1fd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6199bc13-69f0-4c86-9c98-50c68d019f2c",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Minsu Lee",
+      "messages": [],
+      "total_additions": 554,
+      "total_deletions": 5,
+      "accepted_lines": 549,
+      "overriden_lines": 0
+    },
+    "ee740bd1e7592ac9": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "1d915ee9-212a-4be6-8cf4-0f4e28acbf4f",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Minsu Lee",
+      "messages": [],
+      "total_additions": 13,
+      "total_deletions": 0,
+      "accepted_lines": 13,
+      "overriden_lines": 0
+    }
+  }
+}
