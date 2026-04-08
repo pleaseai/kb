@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import { defineCommand, runMain } from 'citty'
+import { ingestCommand } from './commands/ingest'
 import { initCommand } from './commands/init'
 
 const main = defineCommand({
@@ -10,6 +11,7 @@ const main = defineCommand({
   },
   subCommands: {
     init: initCommand,
+    ingest: ingestCommand,
   },
 })
 

@@ -80,11 +80,15 @@ kb init --with-site         # Include Docus config for site deployment
 Add raw source material for a topic.
 
 ```bash
-kb ingest websocket-vs-sse                        # Interactive input
-kb ingest websocket-vs-sse --from file.md         # From local file
-kb ingest websocket-vs-sse --from https://...     # From URL
-kb ingest websocket-vs-sse --from clipboard       # From clipboard
+kb ingest                                              # Interactive prompt (topic + content)
+kb ingest --topic websocket-vs-sse --file notes.md     # From local file
+kb ingest --topic websocket-vs-sse --url https://...   # From URL (HTML→markdown)
+kb ingest --topic websocket-vs-sse --clipboard         # From system clipboard
 ```
+
+Each ingested source is written to `raw/<topic>/` as a markdown file with
+YAML frontmatter (`source`, `ingestedAt`, `sourceHash`). Re-ingesting the
+same content is detected via `sourceHash` and skipped.
 
 ### `kb compile [topic]`
 
