@@ -1,0 +1,33 @@
+.please/docs/tracks/active/kb-ingest-command-20260408/spec.md
+  d82434151fa5a3e4 1-46
+.please/docs/tracks/active/kb-status-command-20260408/plan.md
+  d82434151fa5a3e4 1-43
+.please/docs/tracks/active/kb-graph-schema-20260408/spec.md
+  d82434151fa5a3e4 1-42
+.please/docs/tracks/active/kb-status-command-20260408/spec.md
+  d82434151fa5a3e4 1-42
+.please/docs/tracks/active/kb-graph-schema-20260408/plan.md
+  d82434151fa5a3e4 1-46
+.please/docs/tracks/active/kb-ingest-command-20260408/plan.md
+  d82434151fa5a3e4 1-51
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.5",
+  "base_commit_sha": "aad5955c027b77eab58d6e8c147dcc994a2d9fa0",
+  "prompts": {
+    "d82434151fa5a3e4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "fb25f29a-b203-48ca-b990-ab050535cf8e",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Minsu Lee",
+      "messages": [],
+      "total_additions": 270,
+      "total_deletions": 0,
+      "accepted_lines": 270,
+      "overriden_lines": 0
+    }
+  }
+}
