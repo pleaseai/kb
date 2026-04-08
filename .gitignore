@@ -7,9 +7,6 @@ dist/
 # Turbo
 .turbo/
 
-# Bun
-bun.lock
-
 # Environment
 .env
 .env.*
