@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod'
 
 /**
  * Zod schemas for `graph.json` — the KB knowledge graph.
@@ -10,7 +10,7 @@ import { z } from "zod";
 export const CategoryNodeSchema = z.object({
   feature: z.string().min(1),
   children: z.array(z.string()),
-});
+})
 
 const ArticleMetadataSchema = z.object({
   path: z.string().min(1),
@@ -18,38 +18,38 @@ const ArticleMetadataSchema = z.object({
   created: z.string().min(1),
   updated: z.string().min(1),
   sourceHash: z.string(),
-});
+})
 
 export const ArticleNodeSchema = z.object({
   feature: z.string().min(1),
   category: z.string().min(1),
   dependencies: z.array(z.string()),
   metadata: ArticleMetadataSchema,
-});
+})
 
 export const EdgeSchema = z.object({
   from: z.string().min(1),
   to: z.string().min(1),
-});
+})
 
 const NodesSchema = z.object({
   categories: z.record(z.string(), CategoryNodeSchema),
   articles: z.record(z.string(), ArticleNodeSchema),
-});
+})
 
 const EdgesSchema = z.object({
   functional: z.array(EdgeSchema),
   dependency: z.array(EdgeSchema),
-});
+})
 
 export const GraphSchema = z.object({
   version: z.literal(1),
   lastUpdated: z.string().nullable(),
   nodes: NodesSchema,
   edges: EdgesSchema,
-});
+})
 
-export type CategoryNode = z.infer<typeof CategoryNodeSchema>;
-export type ArticleNode = z.infer<typeof ArticleNodeSchema>;
-export type Edge = z.infer<typeof EdgeSchema>;
-export type Graph = z.infer<typeof GraphSchema>;
+export type CategoryNode = z.infer<typeof CategoryNodeSchema>
+export type ArticleNode = z.infer<typeof ArticleNodeSchema>
+export type Edge = z.infer<typeof EdgeSchema>
+export type Graph = z.infer<typeof GraphSchema>

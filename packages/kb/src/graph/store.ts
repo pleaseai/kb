@@ -1,9 +1,10 @@
-import { readFile, rename, writeFile } from "node:fs/promises";
-import { join } from "pathe";
-import { GraphSchema, type Graph } from "./schema";
-import { GraphParseError } from "./errors";
+import type { Graph } from './schema'
+import { readFile, rename, writeFile } from 'node:fs/promises'
+import { join } from 'pathe'
+import { GraphParseError } from './errors'
+import { GraphSchema } from './schema'
 
-export const GRAPH_FILENAME = "graph.json";
+export const GRAPH_FILENAME = 'graph.json'
 
 /**
  * Produce a fresh, empty graph that satisfies GraphSchema.
@@ -15,21 +16,22 @@ export function createEmptyGraph(): Graph {
     lastUpdated: null,
     nodes: { categories: {}, articles: {} },
     edges: { functional: [], dependency: [] },
-  };
+  }
 }
 
 function parseGraph(raw: string, path: string): Graph {
-  let parsed: unknown;
+  let parsed: unknown
   try {
-    parsed = JSON.parse(raw);
-  } catch (error) {
-    throw new GraphParseError(path, [], error);
+    parsed = JSON.parse(raw)
   }
-  const result = GraphSchema.safeParse(parsed);
+  catch (error) {
+    throw new GraphParseError(path, [], error)
+  }
+  const result = GraphSchema.safeParse(parsed)
   if (!result.success) {
-    throw new GraphParseError(path, result.error.issues);
+    throw new GraphParseError(path, result.error.issues)
   }
-  return result.data;
+  return result.data
 }
 
 /**
@@ -37,9 +39,9 @@ function parseGraph(raw: string, path: string): Graph {
  * Throws GraphParseError on malformed JSON or schema violations.
  */
 export async function loadGraph(kbRoot: string): Promise<Graph> {
-  const path = join(kbRoot, GRAPH_FILENAME);
-  const raw = await readFile(path, "utf8");
-  return parseGraph(raw, path);
+  const path = join(kbRoot, GRAPH_FILENAME)
+  const raw = await readFile(path, 'utf8')
+  return parseGraph(raw, path)
 }
 
 /**
@@ -51,14 +53,14 @@ export async function saveGraph(kbRoot: string, graph: Graph): Promise<Graph> {
   const next: Graph = {
     ...graph,
     lastUpdated: new Date().toISOString(),
-  };
+  }
   // Validate before touching disk so we never persist an invalid graph.
-  const validated = GraphSchema.parse(next);
+  const validated = GraphSchema.parse(next)
 
-  const finalPath = join(kbRoot, GRAPH_FILENAME);
-  const tmpPath = `${finalPath}.tmp`;
-  const serialized = `${JSON.stringify(validated, null, 2)}\n`;
-  await writeFile(tmpPath, serialized, "utf8");
-  await rename(tmpPath, finalPath);
-  return validated;
+  const finalPath = join(kbRoot, GRAPH_FILENAME)
+  const tmpPath = `${finalPath}.tmp`
+  const serialized = `${JSON.stringify(validated, null, 2)}\n`
+  await writeFile(tmpPath, serialized, 'utf8')
+  await rename(tmpPath, finalPath)
+  return validated
 }
