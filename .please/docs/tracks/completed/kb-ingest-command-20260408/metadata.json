@@ -1,10 +1,10 @@
 {
   "track_id": "kb-ingest-command-20260408",
   "type": "feature",
-  "status": "in_progress",
+  "status": "review",
   "created_at": "2026-04-08T08:04:35Z",
-  "updated_at": "2026-04-08T19:30:00Z",
+  "updated_at": "2026-04-08T19:35:00Z",
   "issue": "#2",
-  "pr": "https://github.com/pleaseai/kb/pull/5",
+  "pr": "#7",
   "project": ""
 }
