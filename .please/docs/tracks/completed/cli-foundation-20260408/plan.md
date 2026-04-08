@@ -136,4 +136,31 @@ All must pass before marking the track complete.
 
 ## Surprises & Discoveries
 
-(to be filled during implementation)
+- **Zod 4 default behavior with required object children**: `.default({})` does not work on `z.object({ required: ... })` because TS infers `{}` as missing required props. Solution: drop `.default` from outer wrappers and let `defu` merge full defaults before `parse()`. Cleaner anyway — defaults live in one place (`defaults.ts`).
+- **`resolveLanguageModel` is internal to `ai`**: not exported from `ai` or `ai/internal`. The user pointed at the upstream source file but it's deliberately not part of the public API. AI SDK v6 accepts string model ids on `generateText({ model: 'anthropic/...' })` directly, calling `resolveLanguageModel` internally — so we don't need to depend on it. This let us drop all `@ai-sdk/*` deps from this track.
+- **citty `--version` works automatically** from `meta.version` — no manual `--version` handler needed.
+
+## Outcomes & Retrospective
+
+### What Was Shipped
+
+A working `kb` CLI with `kb init` (scaffold a new KB), a typed config loader (ancestor walk + zod + defu defaults), and a library API surface (`loadConfig`, `KbConfigSchema`, `runInit`, defaults, `KbConfigNotFoundError`). 13 vitest tests cover config and init end-to-end against per-test tempdirs. unbuild produces dual ESM + d.mts artifacts matching the existing `package.json` exports declaration.
+
+### What Went Well
+
+- **Scope discipline**: kept LLM integration fully out of scope. The `model` field is just a validated string — no AI SDK deps shipped in this foundation track.
+- **Test architecture**: every test uses a fresh `mkdtemp` directory, so init and loadConfig are exercised end-to-end without mocking `node:fs`. Made the e2e gate (T-006) almost free.
+- **Library + CLI separation**: `runInit` is a pure function the citty handler wraps, making it directly callable from tests and from any future programmatic consumer.
+- **defu + zod combo**: partial configs auto-merge with defaults before validation — users can write a one-line `kb.config.json` and it still parses.
+
+### What Could Improve
+
+- **LSP diagnostics churn**: stale TS diagnostics from the editor caused several false-alarm fix attempts before falling back to `bun run typecheck` as the source of truth. Lesson: trust `tsc`, not the streaming LSP feedback.
+- **Dependency thrash**: AI SDK deps were added then removed twice as the design clarified ("provider format → gateway → no deps at all"). Could have been avoided by deciding the scope boundary up front.
+- **Branch hygiene**: an unrelated `release-please` commit landed on the branch between the two feature commits. Worth a `.git/hooks` check or branch protection to avoid future cross-contamination.
+
+### Tech Debt Created
+
+- **Nested unknown-key warnings**: `loadConfig` warns only on top-level unknown keys. Nested unknowns (e.g. `llm.unknownField`) silently pass. Acceptable per spec but worth revisiting if config evolves.
+- **No JSON parse error wrapping**: a malformed `kb.config.json` surfaces the raw `JSON.parse` error. Wrapping with file path + suggestion would be friendlier.
+- **`tsconfig.tsbuildinfo` not in `.gitignore`** before this track — added in this PR but pre-existing repos may have stray copies.
