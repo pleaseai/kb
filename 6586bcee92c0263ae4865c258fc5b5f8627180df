@@ -1,0 +1,57 @@
+packages/kb/src/index.ts
+  f80d48b3e79ee54e 1
+packages/kb/src/cli.ts
+  f80d48b3e79ee54e 1-13
+.please/docs/tracks/active/cli-foundation-20260408/plan.md
+  f80d48b3e79ee54e 3-4,6,8-16,18-139
+packages/kb/build.config.ts
+  f80d48b3e79ee54e 1-14
+packages/kb/package.json
+  f80d48b3e79ee54e 15-16,19-20
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.5",
+  "base_commit_sha": "6586bcee92c0263ae4865c258fc5b5f8627180df",
+  "prompts": {
+    "b58e60f034e59153": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "eb881948-0650-44e2-a67d-747523ed236a",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Minsu Lee",
+      "messages": [],
+      "total_additions": 55,
+      "total_deletions": 0,
+      "accepted_lines": 55,
+      "overriden_lines": 0
+    },
+    "ee740bd1e7592ac9": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "1d915ee9-212a-4be6-8cf4-0f4e28acbf4f",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Minsu Lee",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 5,
+      "overriden_lines": 0
+    },
+    "f80d48b3e79ee54e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9912c6e4-5e27-4fe7-b2e1-50aed134aa7d",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Minsu Lee",
+      "messages": [],
+      "total_additions": 169,
+      "total_deletions": 13,
+      "accepted_lines": 168,
+      "overriden_lines": 0
+    }
+  }
+}
