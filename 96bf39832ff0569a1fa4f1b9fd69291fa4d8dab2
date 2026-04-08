@@ -1,0 +1,53 @@
+release-please-config.json
+  b58e60f034e59153 1-27
+.github/workflows/release-please.yml
+  b58e60f034e59153 1-25
+.release-please-manifest.json
+  b58e60f034e59153 1-3
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.5",
+  "base_commit_sha": "96bf39832ff0569a1fa4f1b9fd69291fa4d8dab2",
+  "prompts": {
+    "b58e60f034e59153": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "eb881948-0650-44e2-a67d-747523ed236a",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Minsu Lee",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 55,
+      "overriden_lines": 0
+    },
+    "ee740bd1e7592ac9": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "1d915ee9-212a-4be6-8cf4-0f4e28acbf4f",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Minsu Lee",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 5,
+      "overriden_lines": 0
+    },
+    "f80d48b3e79ee54e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9912c6e4-5e27-4fe7-b2e1-50aed134aa7d",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Minsu Lee",
+      "messages": [],
+      "total_additions": 54,
+      "total_deletions": 0,
+      "accepted_lines": 54,
+      "overriden_lines": 0
+    }
+  }
+}
