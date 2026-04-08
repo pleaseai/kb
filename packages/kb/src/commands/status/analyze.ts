@@ -6,6 +6,7 @@ import { join, relative } from 'pathe'
 import { loadGraph } from '../../graph'
 
 const HASH_LINE_RE = /^sourceHash:\s*"?([a-f0-9]{64})"?\s*$/m
+const BACKSLASH_RE = /\\/g
 
 async function listDir(dir: string): Promise<string[]> {
   if (!existsSync(dir))
@@ -110,10 +111,10 @@ export function detectOrphans(
 ): string[] {
   const known = new Set<string>()
   for (const node of Object.values(graph.nodes.articles)) {
-    known.add(node.metadata.path.replace(/\\/g, '/'))
+    known.add(node.metadata.path.replace(BACKSLASH_RE, '/'))
   }
   const orphans = wikiFiles
-    .map(f => f.replace(/\\/g, '/'))
+    .map(f => f.replace(BACKSLASH_RE, '/'))
     .filter(f => !known.has(f))
   orphans.sort()
   return orphans

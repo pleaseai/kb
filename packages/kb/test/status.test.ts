@@ -5,6 +5,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { runIngest } from '../src/commands/ingest'
 import { sha256 } from '../src/commands/ingest/writer'
 import { runInit } from '../src/commands/init'
+import { runStatus } from '../src/commands/status'
 import {
   analyze,
   detectOrphans,
@@ -13,7 +14,6 @@ import {
   walkWiki,
 } from '../src/commands/status/analyze'
 import { formatReport } from '../src/commands/status/format'
-import { runStatus } from '../src/commands/status'
 import { StatusReportSchema } from '../src/commands/status/types'
 import { createEmptyGraph, loadGraph, saveGraph } from '../src/graph'
 
@@ -112,7 +112,7 @@ describe('detectStale', () => {
 describe('detectOrphans', () => {
   it('flags wiki files not referenced by any graph article', () => {
     const graph = createEmptyGraph()
-    graph.nodes.articles['known'] = {
+    graph.nodes.articles.known = {
       feature: 'auth',
       category: 'flows',
       dependencies: [],
