@@ -40,8 +40,8 @@ Wire `compile` into `src/cli.ts` alongside `init`, `ingest`, `status`.
 
 ### Phase 2 — Chunking
 
-- [ ] T004 Port recursive chunker from gbrain preserving test vectors (file: packages/kb/src/core/chunkers/recursive.ts)
-- [ ] T005 Define Chunker interface and default dispatcher (file: packages/kb/src/core/chunkers/index.ts)
+- [x] T004 Port recursive chunker from gbrain preserving test vectors (file: packages/kb/src/core/chunkers/recursive.ts)
+- [x] T005 Define Chunker interface and default dispatcher (file: packages/kb/src/core/chunkers/index.ts)
 
 ### Phase 3 — LLM compilation
 
