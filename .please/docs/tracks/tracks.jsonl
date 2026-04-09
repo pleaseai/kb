@@ -1,3 +1,4 @@
 {"id": "kb-ingest-command-20260408", "type": "feature", "status": "planned", "phase": "spec", "issue": "#2", "created": "2026-04-08", "section": "active"}
 {"id": "kb-status-command-20260408", "type": "feature", "status": "planned", "phase": "spec", "issue": "#3", "created": "2026-04-08", "section": "active"}
 {"id": "kb-graph-schema-20260408", "type": "feature", "status": "planned", "phase": "spec", "issue": "#4", "created": "2026-04-08", "section": "active"}
+{"id": "kb-compile-command-20260409", "type": "feature", "status": "in_progress", "phase": "implement", "issue": "#9", "created": "2026-04-09", "section": "active"}
