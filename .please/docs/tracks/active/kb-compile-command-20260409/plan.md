@@ -36,7 +36,7 @@ Wire `compile` into `src/cli.ts` alongside `init`, `ingest`, `status`.
 
 - [x] T001 Port sha256 file + stable topic-dir hash from gbrain into core/hash.ts (file: packages/kb/src/core/hash.ts)
 - [x] T002 Implement planner: scan raw/, compute per-topic sourceHash, diff against graph.json, emit ChangeSet (file: packages/kb/src/commands/compile/planner.ts)
-- [ ] T003 Wire compile command skeleton with --dry-run flag that prints the ChangeSet (file: packages/kb/src/commands/compile/index.ts)
+- [x] T003 Wire compile command skeleton with --dry-run flag that prints the ChangeSet (file: packages/kb/src/commands/compile/index.ts)
 
 ### Phase 2 — Chunking
 
