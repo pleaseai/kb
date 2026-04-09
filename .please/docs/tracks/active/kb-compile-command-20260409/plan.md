@@ -34,28 +34,28 @@ Wire `compile` into `src/cli.ts` alongside `init`, `ingest`, `status`.
 
 ### Phase 1 — Hashing & change detection
 
-- [ ] **T-001** Port `sha256File()` + stable directory hash from `vendor/gbrain/src/core/import-file.ts` into `core/hash.ts` (TDD)
-- [ ] **T-002** Implement `planner.ts`: scan `raw/`, compute per-topic sourceHash, diff against `graph.json`, emit `ChangeSet { added, modified, deleted }` (TDD with temp fixture KB)
-- [ ] **T-003** Add `--dry-run` flag that prints the ChangeSet without compiling
+- [ ] T001 Port sha256 file + stable topic-dir hash from gbrain into core/hash.ts (file: packages/kb/src/core/hash.ts)
+- [ ] T002 Implement planner: scan raw/, compute per-topic sourceHash, diff against graph.json, emit ChangeSet (file: packages/kb/src/commands/compile/planner.ts)
+- [ ] T003 Wire compile command skeleton with --dry-run flag that prints the ChangeSet (file: packages/kb/src/commands/compile/index.ts)
 
 ### Phase 2 — Chunking
 
-- [ ] **T-004** Port `recursive` chunker from `vendor/gbrain/src/core/chunkers/recursive.ts` into `core/chunkers/recursive.ts`, adapting types to kb's pure-module style (TDD — port gbrain's existing test vectors)
-- [ ] **T-005** Define `Chunker` interface + options; dispatch defaults to recursive
+- [ ] T004 Port recursive chunker from gbrain preserving test vectors (file: packages/kb/src/core/chunkers/recursive.ts)
+- [ ] T005 Define Chunker interface and default dispatcher (file: packages/kb/src/core/chunkers/index.ts)
 
 ### Phase 3 — LLM compilation
 
-- [ ] **T-006** Prompt template for raw → wiki article (frontmatter + body + Related section) per SPEC §"LLM Delegation Model"
-- [ ] **T-007** `executor.ts`: load sources → chunk → call Anthropic SDK → parse response → write `wiki/<topic>.md` via `writer.ts` (TDD with mocked LLM)
-- [ ] **T-008** Frontmatter merge: preserve `created`, bump `updated`, update `sources[]` + `sourceHash`
+- [ ] T006 Prompt template for raw-to-wiki compilation per SPEC LLM Delegation Model (file: packages/kb/src/commands/compile/prompt.ts)
+- [ ] T007 Executor: load sources, chunk, call Anthropic SDK, parse response, write wiki article (file: packages/kb/src/commands/compile/executor.ts)
+- [ ] T008 Frontmatter merge: preserve created, bump updated, update sources and sourceHash (file: packages/kb/src/commands/compile/writer.ts)
 
 ### Phase 4 — Integration
 
-- [ ] **T-009** Wire `compile` into `cli.ts` with flags: `[topic]`, `--full`, `--dry-run`
-- [ ] **T-010** Post-compile hook: invoke `kb index` (existing graph.json rebuilder) to refresh nodes/edges
-- [ ] **T-011** Append compile entries to `log.md` (`## [date] compile | <topic>` format)
-- [ ] **T-012** End-to-end test: temp KB → ingest → compile → assert wiki/ output + graph.json sourceHash match
-- [ ] **T-013** Update `README.md` and CLI `--help`
+- [ ] T009 Wire compile into cli.ts with flags topic, --full, --dry-run (file: packages/kb/src/cli.ts)
+- [ ] T010 Post-compile hook invoking kb index to refresh graph.json and INDEX.md (file: packages/kb/src/commands/compile/pipeline.ts)
+- [ ] T011 Append compile entries to log.md per SPEC activity log format (file: packages/kb/src/commands/compile/log.ts)
+- [ ] T012 End-to-end integration test temp KB ingest compile assert wiki output and sourceHash match (file: packages/kb/test/compile.test.ts)
+- [ ] T013 Update README.md usage and CLI --help output (file: packages/kb/README.md)
 
 ## gbrain References
 
