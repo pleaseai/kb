@@ -1,0 +1,31 @@
+packages/kb/test/chunkers-recursive.test.ts
+  090b165b5dd49bf5 1-77,79-83,85-91,93-106,108-127
+packages/kb/src/core/chunkers/index.ts
+  090b165b5dd49bf5 1-40
+packages/kb/test/chunkers.test.ts
+  090b165b5dd49bf5 1-22
+.please/docs/tracks/active/kb-compile-command-20260409/plan.md
+  090b165b5dd49bf5 43-44
+packages/kb/src/core/chunkers/recursive.ts
+  090b165b5dd49bf5 1-144,146,148-189
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.6",
+  "base_commit_sha": "70c996540ee32cd86ed654efb413cf5c55ac9e7a",
+  "prompts": {
+    "090b165b5dd49bf5": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "210b376d-320d-4bd5-b72a-9fcb693d7617",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Minsu Lee",
+      "messages": [],
+      "total_additions": 391,
+      "total_deletions": 8,
+      "accepted_lines": 374,
+      "overriden_lines": 6
+    }
+  }
+}
