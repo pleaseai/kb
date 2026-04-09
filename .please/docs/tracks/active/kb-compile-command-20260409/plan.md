@@ -45,9 +45,9 @@ Wire `compile` into `src/cli.ts` alongside `init`, `ingest`, `status`.
 
 ### Phase 3 — LLM compilation
 
-- [ ] T006 Prompt template for raw-to-wiki compilation per SPEC LLM Delegation Model (file: packages/kb/src/commands/compile/prompt.ts)
-- [ ] T007 Executor: load sources, chunk, call Anthropic SDK, parse response, write wiki article (file: packages/kb/src/commands/compile/executor.ts)
-- [ ] T008 Frontmatter merge: preserve created, bump updated, update sources and sourceHash (file: packages/kb/src/commands/compile/writer.ts)
+- [x] T006 Prompt template for raw-to-wiki compilation per SPEC LLM Delegation Model (file: packages/kb/src/commands/compile/prompt.ts)
+- [x] T007 Executor: load sources, chunk, call Anthropic SDK, parse response, write wiki article (file: packages/kb/src/commands/compile/executor.ts)
+- [x] T008 Frontmatter merge: preserve created, bump updated, update sources and sourceHash (file: packages/kb/src/commands/compile/writer.ts)
 
 ### Phase 4 — Integration
 
