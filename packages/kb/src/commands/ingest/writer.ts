@@ -1,17 +1,15 @@
 import type { IngestOptions, IngestResult } from './types'
-import { createHash } from 'node:crypto'
 import { existsSync } from 'node:fs'
 import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises'
 import { join } from 'pathe'
+import { sha256 } from '../../core/hash'
+
+export { sha256 }
 
 const FRONTMATTER_FENCE = '---'
 const HASH_LINE_RE = /^sourceHash:\s*"?([a-f0-9]{64})"?\s*$/m
 const QUOTE_RE = /"/g
 const UNSAFE_PATH_RE = /[/\\\0]|^\.\.?$|(?:^|\/)\.\.(?:\/|$)/
-
-export function sha256(content: string): string {
-  return createHash('sha256').update(content, 'utf8').digest('hex')
-}
 
 /**
  * Reject path segments (topic, filename) that contain separators, parent
