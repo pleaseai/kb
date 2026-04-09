@@ -1,0 +1,29 @@
+.please/docs/tracks/active/kb-compile-command-20260409/plan.md
+  090b165b5dd49bf5 37
+packages/kb/src/commands/ingest/writer.ts
+  090b165b5dd49bf5 5,7
+packages/kb/test/hash.test.ts
+  090b165b5dd49bf5 1-105
+packages/kb/src/core/hash.ts
+  090b165b5dd49bf5 1-50
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.6",
+  "base_commit_sha": "096855e0066bc9b4c675458c48e9e3270c46ed3b",
+  "prompts": {
+    "090b165b5dd49bf5": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "210b376d-320d-4bd5-b72a-9fcb693d7617",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Minsu Lee",
+      "messages": [],
+      "total_additions": 160,
+      "total_deletions": 7,
+      "accepted_lines": 159,
+      "overriden_lines": 0
+    }
+  }
+}
