@@ -51,11 +51,11 @@ Wire `compile` into `src/cli.ts` alongside `init`, `ingest`, `status`.
 
 ### Phase 4 — Integration
 
-- [ ] T009 Wire compile into cli.ts with flags topic, --full, --dry-run (file: packages/kb/src/cli.ts)
-- [ ] T010 Post-compile hook invoking kb index to refresh graph.json and INDEX.md (file: packages/kb/src/commands/compile/pipeline.ts)
-- [ ] T011 Append compile entries to log.md per SPEC activity log format (file: packages/kb/src/commands/compile/log.ts)
-- [ ] T012 End-to-end integration test temp KB ingest compile assert wiki output and sourceHash match (file: packages/kb/test/compile.test.ts)
-- [ ] T013 Update README.md usage and CLI --help output (file: packages/kb/README.md)
+- [x] T009 Wire compile into cli.ts with flags topic, --full, --dry-run (file: packages/kb/src/cli.ts)
+- [x] T010 Post-compile hook invoking kb index to refresh graph.json and INDEX.md (file: packages/kb/src/commands/compile/pipeline.ts)
+- [x] T011 Append compile entries to log.md per SPEC activity log format (file: packages/kb/src/commands/compile/log.ts)
+- [x] T012 End-to-end integration test temp KB ingest compile assert wiki output and sourceHash match (file: packages/kb/test/compile.test.ts)
+- [x] T013 Update README.md usage and CLI --help output (file: packages/kb/README.md)
 
 ## gbrain References
 

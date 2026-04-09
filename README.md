@@ -92,13 +92,47 @@ same content is detected via `sourceHash` and skipped.
 
 ### `kb compile [topic]`
 
-Compile raw sources into structured wiki articles using an LLM. Incremental by default — only recompiles topics whose raw sources have changed.
+Compile raw sources into structured wiki articles using an LLM. Incremental by default — only recompiles topics whose raw `sourceHash` has changed since the last run.
 
 ```bash
-kb compile websocket-vs-sse   # One topic (force)
-kb compile                    # All changed topics
-kb compile --full             # Force full recompilation
+kb compile                    # Compile all topics whose raw sources changed
+kb compile websocket-vs-sse   # Only this topic
+kb compile --full             # Force recompilation of every topic
+kb compile --dry-run          # Print the change set without calling the LLM
 ```
+
+Compile runs a four-step pipeline:
+
+1. **Plan** — hash every `raw/<topic>/` directory, diff against `graph.json`
+2. **Execute** — for added/modified topics, load raw sources, window them via the recursive chunker, call the LLM, and write `wiki/<topic>.md` with frontmatter (`title`, `summary`, `tags`, `created`, `updated`, `sources`, `sourceHash`)
+3. **Graph update** — refresh article nodes in `graph.json` with the new metadata and `sourceHash`
+4. **Log append** — write a `## [YYYY-MM-DD] compile | ...` entry to `log.md`
+
+Use `--dry-run` first to preview what will be compiled:
+
+```bash
+$ kb compile --dry-run
+Compile plan:
+  added:
+    - websocket-vs-sse
+  modified: (none)
+  unchanged:
+    - oauth2-flows
+  deleted: (none)
+```
+
+Programmatic use (tests, custom LLM providers) can inject an `LlmClient`:
+
+```ts
+import { runCompile } from '@pleaseai/kb'
+
+await runCompile({
+  cwd: '/path/to/kb',
+  llm: { complete: async ({ system, user }) => myModel.call(system, user) },
+})
+```
+
+> The built-in LLM provider adapter is not yet wired. Until it ships, non-dry-run CLI runs require injecting a client programmatically.
 
 ### `kb index`
 

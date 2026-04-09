@@ -83,9 +83,38 @@ describe('runCompile --dry-run', () => {
   })
 })
 
-describe('runCompile (no dry-run, executor not yet implemented)', () => {
-  it('throws a not-implemented error when asked to execute', async () => {
+describe('runCompile (no dry-run)', () => {
+  it('throws a helpful error when no LLM client is configured or injected', async () => {
     await writeRaw('demo', 'a.md', 'body')
-    await expect(runCompile({ cwd: workDir, dryRun: false })).rejects.toThrow(/not yet implemented/i)
+    await expect(runCompile({ cwd: workDir, dryRun: false })).rejects.toThrow(
+      /no LLM client configured/i,
+    )
+  })
+
+  it('executes the full pipeline when an LLM client is injected', async () => {
+    await writeRaw('demo', 'a.md', 'source body')
+    const response = [
+      '# Demo',
+      '',
+      'Compiled body.',
+      '',
+      '```kb-meta',
+      'summary: Demo article',
+      'tags: demo, test',
+      '```',
+    ].join('\n')
+    const llm = { complete: async () => response }
+
+    const result = await runCompile({
+      cwd: workDir,
+      dryRun: false,
+      llm,
+      now: () => new Date('2026-04-09T12:00:00Z'),
+    })
+
+    expect(result.executed).toBe(true)
+    expect(result.results).toHaveLength(1)
+    expect(result.results?.[0].status).toBe('compiled')
+    expect(result.plan.added).toEqual(['demo'])
   })
 })
