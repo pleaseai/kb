@@ -1,0 +1,35 @@
+packages/kb/test/compile-writer.test.ts
+  090b165b5dd49bf5 1-121
+packages/kb/test/compile-prompt.test.ts
+  090b165b5dd49bf5 1-86
+packages/kb/test/compile-executor.test.ts
+  090b165b5dd49bf5 1-178
+packages/kb/src/commands/compile/executor.ts
+  090b165b5dd49bf5 1-194
+packages/kb/src/commands/compile/writer.ts
+  090b165b5dd49bf5 1-146
+packages/kb/src/commands/compile/prompt.ts
+  090b165b5dd49bf5 1-116
+.please/docs/tracks/active/kb-compile-command-20260409/plan.md
+  090b165b5dd49bf5 48-50
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.6",
+  "base_commit_sha": "835e080802007735bebda57f646223ef7eb81af5",
+  "prompts": {
+    "090b165b5dd49bf5": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "210b376d-320d-4bd5-b72a-9fcb693d7617",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Minsu Lee",
+      "messages": [],
+      "total_additions": 874,
+      "total_deletions": 33,
+      "accepted_lines": 844,
+      "overriden_lines": 0
+    }
+  }
+}
