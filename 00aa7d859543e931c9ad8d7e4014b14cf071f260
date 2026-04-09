@@ -1,0 +1,27 @@
+packages/kb/test/compile-planner.test.ts
+  090b165b5dd49bf5 1-135
+.please/docs/tracks/active/kb-compile-command-20260409/plan.md
+  090b165b5dd49bf5 38
+packages/kb/src/commands/compile/planner.ts
+  090b165b5dd49bf5 1-109
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.6",
+  "base_commit_sha": "00aa7d859543e931c9ad8d7e4014b14cf071f260",
+  "prompts": {
+    "090b165b5dd49bf5": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "210b376d-320d-4bd5-b72a-9fcb693d7617",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Minsu Lee",
+      "messages": [],
+      "total_additions": 246,
+      "total_deletions": 2,
+      "accepted_lines": 245,
+      "overriden_lines": 0
+    }
+  }
+}
