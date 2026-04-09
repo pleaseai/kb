@@ -1,0 +1,53 @@
+.please/docs/tracks/tracks.jsonl
+  090b165b5dd49bf5 4
+.please/docs/tracks/active/kb-compile-command-20260409/spec.md
+  090b165b5dd49bf5 1-61
+.please/docs/tracks/active/kb-compile-command-20260409/metadata.json
+  090b165b5dd49bf5 1-10
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.6",
+  "base_commit_sha": "007e151d849c0546e68a23aec52fc824b7852363",
+  "prompts": {
+    "090b165b5dd49bf5": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "210b376d-320d-4bd5-b72a-9fcb693d7617",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Minsu Lee",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 72,
+      "overriden_lines": 0
+    },
+    "ee740bd1e7592ac9": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "1d915ee9-212a-4be6-8cf4-0f4e28acbf4f",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Minsu Lee",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 5,
+      "overriden_lines": 0
+    },
+    "f80d48b3e79ee54e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9912c6e4-5e27-4fe7-b2e1-50aed134aa7d",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Minsu Lee",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 3,
+      "overriden_lines": 0
+    }
+  }
+}
